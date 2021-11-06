@@ -1,0 +1,20 @@
+guest_name: "nay"
+guest_user: "nay"
+memory : 2048
+cpus: 2
+sync_folder: 
+  - host: "/Users/pranay/sync"
+    guest: "/home/vagrant/sync"
+git_repo:
+  - "https://github.com/pranaySinghDev/mind-palace.git"
+  - "https://github.com/pranaySinghDev/goSAK.git"
+port_forward:
+  - host: 5000
+    guest: 5000
+  - host: 7000
+    guest: 7000
+shell: "fish"
+lang:
+  - "go"
+  - "node"
+  - "protobuf"

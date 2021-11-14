@@ -62,28 +62,38 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", privileged: false, path: "lifecycle/startup.sh"
 
   # Install git
-  config.vm.provision "shell", privileged: false, path: "git/github.sh"
+  config.vm.provision "shell", privileged: false,  env: {"token" => ENV['token']}, path: "git/github.sh"
 
   # Clone git repos
   if CONF.has_key?("git_repo")
     CONF['git_repo'].each do |repo|
-        config.vm.provision "shell", env: {"token" => ENV['token']}, inline: <<-SHELL
+        config.vm.provision "shell", privileged: false, inline: <<-SHELL
         cd workspace 
-        repo=#{repo}
-        comm=$(echo $repo | awk '{split($0,a,"https://"); print a[2]}')
-        printf -v url "https://%s@%s" $token $comm
-        echo $url
-        git clone $url
+        git clone #{repo}
       SHELL
     end
   end
-    
+
   # Install a better shell
   # Replace the script with shell of your choice from /shells folder
   if CONF.has_key?("shell")
     config.vm.provision "shell", privileged: false, path: "shells/fish.sh"
   end
-  
+
+  # Install IDE and setup its environment
+  if CONF.has_key?("IDE")
+    config.vm.provision "shell", privileged: false, path: "IDE/vscode.sh"
+  end
+
+  # Install IDE exts
+  if CONF.has_key?("code_exts")
+    CONF['code_exts'].each do |ext|
+      config.vm.provision "shell", privileged: false, inline: <<-SHELL
+        code-server --install-extension #{ext}
+      SHELL
+    end
+  end
+
   # Install golang and setup its environment
   if CONF.has_key?("lang")
     config.vm.provision "shell", privileged: false, path: "platforms/go/go.sh"
@@ -92,7 +102,10 @@ Vagrant.configure("2") do |config|
   #Install container
   config.vm.provision "shell", privileged: false, path: "containers/nerdctl.sh"
 
-  # #Install container dashboard
-  # config.vm.provision "shell", privileged: false, path: "containers/dashboard.sh"
+  #Install container dashboard
+  config.vm.provision "shell", privileged: false, path: "containers/dashboard.sh"
+  
+  #Install go packages
+  config.vm.provision "shell", privileged: false, path: "platforms/go/pkgs.sh"
 
 end

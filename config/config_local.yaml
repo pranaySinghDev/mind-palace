@@ -9,12 +9,25 @@ git_repo:
   - "https://github.com/pranaySinghDev/mind-palace.git"
   - "https://github.com/pranaySinghDev/goSAK.git"
 port_forward:
-  - host: 5000
-    guest: 5000
-  - host: 7000
-    guest: 7000
+  - host: 8080 #to run vscode on host
+    guest: 8080
+  - host: 9090 #to monitor vm health
+    guest: 9090
 shell: "fish"
 lang:
   - "go"
   - "node"
   - "protobuf"
+IDE:
+  - "vscode"
+code_exts:
+  - akamud.vscode-theme-onedark
+  - golang.go
+  - tinkertrain.theme-panda 
+  - eamodio.gitlens
+  - esbenp.prettier-vscode
+  - zxh404.vscode-proto3
+  - coenraads.bracket-pair-colorizer
+  - oderwat.indent-rainbow
+  - redhat.vscode-yaml
+  - editorconfig.editorconfig
